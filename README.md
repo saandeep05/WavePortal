@@ -7,10 +7,10 @@ The smart contract is deployed to the goerli network (ethereum testnet)
     ReactJS
 
 ### Backend:
-    Solidity (smart contract),
-    Hardhat (testing and deploying),
+    Solidity (smart contract)
+    Hardhat (testing and deploying)
     QuickNode (deploying the smart contract to the testnet)
 
 
 ### Website link
-https://waveportalapp.kottesaandeep.repl.co/#
+    https://waveportalapp.kottesaandeep.repl.co/#
