@@ -14,9 +14,15 @@ contract WavePortal {
 
     WaveInfo[] public waveStore;
     mapping(address => string) public username;
+    mapping(string => bool) public usernameIsPresent;
 
     constructor() {
         console.log("Hello, I'm WavePortal smart contract");
+    }
+
+    modifier validUsername(string memory name) {
+        require(!usernameIsPresent[name], "Username already exists!");
+        _;
     }
 
     function wave(string memory message) public {
@@ -40,8 +46,9 @@ contract WavePortal {
         return waveCount[user];
     }
 
-    function setUsername(string memory name) public {
+    function setUsername(string memory name) public validUsername(name) {
         username[msg.sender] = name;
+        usernameIsPresent[name] = true;
     }
 
     function getUsername(address addr) public view returns(string memory) {

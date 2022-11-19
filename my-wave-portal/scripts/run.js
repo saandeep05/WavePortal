@@ -1,3 +1,4 @@
+const { Contract } = require("ethers");
 const { run } = require("hardhat");
 
 const main = async() => {
@@ -12,6 +13,7 @@ const main = async() => {
     let waveCount = await waveContract.getTotalWaves();
 
     let waveTxn = await waveContract.wave("This is test tweet 1");
+    waveTxn = await waveContract.setUsername("Saandeep");
     await waveTxn.wait();
 
     waveTxn = await waveContract.connect(user1).wave("This is test tweet 2");
@@ -26,6 +28,12 @@ const main = async() => {
     while(i<waveCount) {
         let waveInfo = await waveContract.getWaveInfo(i);
         console.log(waveInfo.tweet, "by", waveInfo.account, "at", waveInfo.timestamp.toNumber());
+        
+        let txn = await waveContract.getUsername(waveInfo.account);
+        if(txn !== "")
+            console.log("username:", txn);
+        else
+            console.log("username: anonymous");
         i++;
     }
 
