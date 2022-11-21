@@ -47,14 +47,15 @@
 } */
 
 .Feed {
-/*   border: 2px solid #363030; */
+/*   border: 1px solid #f1efef; */
   height: auto;
   width: auto;
+/*   opacity: 0.5; */
 }
 
 .tweetSection {
-  box-shadow: 0 3px 10px 5px gray;
-  background: gray;
+  box-shadow: 0 2px 5px 2px #8e8585;
+  background: rgba(199, 188, 188, 0.1);
 /*   border: 2px solid black; */
   padding: 10px;
   position: auto;
@@ -63,8 +64,8 @@
 }
 
 .card-text {
-  font-family: cursive;
-  font-style: oblique;
+  font-family: sans-serif;
+  font-style: arial;
 }
 
 ::-webkit-scrollbar {

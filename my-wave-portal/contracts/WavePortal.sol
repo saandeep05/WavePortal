@@ -58,5 +58,9 @@ contract WavePortal {
     function getWaveInfo(uint index) public view returns(WaveInfo memory) {
         return waveStore[index];
     }
+    
+    function award(address payable _receiver) public payable {
+        _receiver.transfer(msg.value);
+    }
 
 }
