@@ -12,8 +12,10 @@ export default function App() {
   const [display, setDisplay] = useState(false);
   const [username, setUsername] = useState("");
   const [currName, setCurrName] = useState("");
+  const [allUserNames, setAllUserNames] = useState({});
+  const [award, setAward] = useState(0);
   // const [waveContract, setWaveContract] = useState("");
-  const contractAddress = "0xAe2654d67e95B46bfFffA32aeEfb221A5d25664B";
+  const contractAddress = "0x5b7E64091eF8f9495A493EADD3736350C111478b";
   const ABI = abi.abi;
   
   const checkIfWalletIsConnected = async() => {
@@ -49,7 +51,7 @@ export default function App() {
 
       const accounts = await ethereum.request({ method: "eth_requestAccounts"});
       console.log("Wallet connected with address ", accounts[0]);
-      console.log("Alias: ", await getUname(accounts[0]));
+      // console.log("Alias: ", await getUname(accounts[0]));
       setCurrentAccount(accounts[0]);
     } catch(error) {
       console.log(error);
@@ -96,16 +98,24 @@ export default function App() {
         const wavePortalContract = new ethers.Contract(contractAddress, ABI, signer);
         
         let n = await wavePortalContract.getTotalWaves();
+        console.log("Tweets retrieved from contract: ", n.toNumber());
 
-        if(n == allTweets.length) {
+        if(n.toNumber() == allTweets.length) {
+          console.log(allUserNames);
           console.log("No New Tweets");
         }
-        // console.log(allTweets.length);
+        console.log("Number of tweets currently: ", allTweets.length);
         for(let i=allTweets.length;i<n;i++) {
           let waveInfo = await wavePortalContract.getWaveInfo(i);
           allTweets[i] = waveInfo;
           setAllTweets(allTweets);
           console.log(allTweets[i].tweet.toUpperCase());
+
+          let _uname = await wavePortalContract.getUsername(waveInfo.account);
+          let temp = allUserNames;
+          console.log(temp);
+          temp[waveInfo.account.toString()] = _uname.toString();
+          setAllUserNames(temp);
         }
         setDisplay(false);
         setDisplay(true);
@@ -133,6 +143,11 @@ export default function App() {
 
         const Txn = await wavePortal.setUsername(username);
         await Txn.wait();
+
+          let temp = allUserNames;
+          console.log(temp);
+          temp[signer] = username;
+          setAllUserNames(temp);
       } else {
         console.log("Wallet not connected");
       }
@@ -141,17 +156,42 @@ export default function App() {
     }
   }
 
-  const getUname = async(tempAddress) => {
+  // const getUname = async(tempAddress) => {
+  //   try {
+  //     const { ethereum } = window;
+  //     if(ethereum) {
+  //       const provider = new ethers.providers.Web3Provider(ethereum);
+  //       const signer = provider.getSigner();
+  //       const wavePortal = new ethers.Contract(contractAddress, ABI, signer);
+
+  //       let Txn = await wavePortal.getUsername(tempAddress);
+  //       setCurrName(Txn.toString());
+  //       return Txn.toString();
+  //     } else {
+  //       console.log("Wallet not connected");
+  //     }
+  //   } catch(error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  const getAward = async(val) => {
+    setAward(val.target.value);
+  }
+
+  const sendAward = async() => {
     try {
       const { ethereum } = window;
       if(ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-        const wavePortal = new ethers.Contract(contractAddress, ABI, signer);
+        const waveContract = new ethers.Contract(contractAddress, ABI, signer);
+        // console.log(signer);
 
-        let Txn = await wavePortal.getUsername(tempAddress);
-        setCurrName(Txn.toString());
-        return Txn.toString();
+        let waveTxn = await waveContract.award("0x0Dffc612a4Faf7FC3144B61c66E756EFB4784d8B", {value:ethers.utils.parseEther(award).toString()});
+        // ownerBalance = await owner.getBalance();
+        // console.log("After award:", ownerBalance.toString());
+        await waveTxn.wait();
       } else {
         console.log("Wallet not connected");
       }
@@ -160,9 +200,9 @@ export default function App() {
     }
   }
 
-  // useEffect(() => {
-  //   checkIfWalletIsConnected();
-  // }, []);
+  useEffect(() => {
+    checkIfWalletIsConnected();
+  }, []);
 
   useEffect(() => {
     iterateTweets();
@@ -174,11 +214,11 @@ export default function App() {
 
       <div className="dataContainer col">
         <div className="header">
-        👋 Hey there!
-          <br/>
+        Meet the world
+          <br/><br/>
         </div>
 
-        <div className="container justify-content-center">Logged in as : {currentAccount}</div><br/><br/>
+       
 
 
         {!currentAccount && 
@@ -194,7 +234,7 @@ export default function App() {
         {currentAccount && 
           <div className="form-group">
             <input type="text" className="form-control" placeholder="Write here..." onChange={getTweet}></input>
-            <button className="waveButton" onClick={wave}>Wave at Me</button>
+            <button className="waveButton" onClick={wave}>Wave to the world</button>
           </div>}
 
         {currentAccount && 
@@ -215,14 +255,18 @@ export default function App() {
               <div className="card">
                 <div className="card-body">
                   
-                  <h5 className="card-title lead">{currName}</h5>
+                  <h5 className="card-title lead">{allUserNames[Tweet.account.toString()]}</h5>
                   <h6 className="card-subtitle mb-2 text-muted">
                     {Tweet.account.toString()}
                   </h6>
-                  <p className="card-text"><b>{Tweet.tweet.toUpperCase()}</b></p>
+                  <p className="card-text"><b>{Tweet.tweet}</b></p>
                   <a href="#" className="card-link">Like</a>
                   <a href="#" className="card-link">Comment</a>
-                  <button href="" className="card-link">Award</button>
+                  <div className="form-group">
+                    <br/>
+                    <input type="text" className="form-control" onChange={getAward} placeholder="Enter eth..."></input>
+                    <button className="card-link" onClick={sendAward}>Award</button>
+                  </div>
                 </div>
               </div>
               <br/>

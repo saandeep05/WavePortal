@@ -1,18 +1,36 @@
 {
+  "homepage": "https//:localhost:3000",
   "name": "ReplitReactjsProject",
   "version": "0.0.1",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
+    "build": "react-scripts build",
+    "serve": "vite preview",
+    "start": "react-scripts start"
   },
   "dependencies": {
     "@types/react": "^17.0.13",
     "@types/react-dom": "^17.0.8",
+    "@vitejs/plugin-react": "^2.0.0",
+    "ethers": "^5.4.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "vite": "^3.0.4",
-    "ethers": "^5.4.4",
-    "@vitejs/plugin-react": "^2.0.0"
+    "react-scripts": "^5.0.1",
+    "vite": "^3.0.4"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@openzeppelin/contracts": "^4.8.0"
   }
 }

@@ -1,7 +1,7 @@
 ## Wave Portal README
 
 ##### [Wave Portal](https://waveportalapp.kottesaandeep.repl.co/) allows people to tweet on blockchain.
-##### The [smart contract](https://goerli.etherscan.io/address/0xAe2654d67e95B46bfFffA32aeEfb221A5d25664B) is deployed to the goerli network (ethereum testnet)
+##### The [smart contract](https://goerli.etherscan.io/address/0x5b7E64091eF8f9495A493EADD3736350C111478b) is deployed to the goerli network (ethereum testnet)
 
 ### Frontend:
     ReactJS
